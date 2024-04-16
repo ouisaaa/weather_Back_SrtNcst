@@ -1,9 +1,11 @@
 server:
   port: 4003
+
 openAPI:
   link: "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"
   serviceKey: "SjK%2BeUJ10mCtIhPiTCs8gxTugbmIwnX03Lv%2BI5Y3Hq4horreyZaKM3b5dFCcpF%2BmDuyvdsJQbLSp24CvubSD1A%3D%3D"
   dataType: "JSON"
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/location
@@ -12,3 +14,9 @@ spring:
   mybatis:
     configuration:
       map-underscore-to-camel-case: true
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: weather_report_list

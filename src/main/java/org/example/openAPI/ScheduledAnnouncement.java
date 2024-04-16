@@ -2,6 +2,8 @@ package org.example.openAPI;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.example.service.WeatherService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,10 @@ import java.time.format.DateTimeFormatter;
 public class ScheduledAnnouncement {
     private String announcementTime;
     private String announcenmentDate=LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
+
+    @Autowired
+    private WeatherService weatherService;
+
     public ScheduledAnnouncement(){
         if(LocalTime.now().getMinute()<45){
             if(LocalTime.now().getHour()==0){
@@ -38,6 +44,9 @@ public class ScheduledAnnouncement {
         announcementTime=LocalTime.now().getHour()+"00";
         log.info("일기예보 발표시간이 업데이트되었습니다. 업데이트 시간: "+announcementTime);
     }
-
+//    @Scheduled(cron="0 0 * * * *")
+//    public void updateReport(){
+//        weatherService.writeWeatherReport(weatherService.httpResultJSON());
+//    }
 
 }

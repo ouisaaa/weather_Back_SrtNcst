@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.component.OpenAPIComponent;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,12 +28,12 @@ import java.util.HashMap;
 public class openAPIRequest {
     private final OpenAPIComponent openAPIComponent;
     private final ScheduledAnnouncement scheduledAnnouncement= new ScheduledAnnouncement();
-    private String nowDate = scheduledAnnouncement.getAnnouncenmentDate();
-    private String nowTime = scheduledAnnouncement.getAnnouncementTime();
+//    private String nowDate = scheduledAnnouncement.getAnnouncenmentDate();
+//    private String nowTime = scheduledAnnouncement.getAnnouncementTime();
 
 
     //초단기예보 메소드
-    public APIResult SrtNcst(int nx,int ny) {
+    public APIResult SrtNcst(int nx,int ny, String nowDate,String nowTime) {
         String urlLink = openAPIComponent.getLink()+"?serviceKey="+openAPIComponent.getServiceKey()
                 +"&dataType="+openAPIComponent.getDataType()
                 +"&base_date="+nowDate+"&base_time="+nowTime;
@@ -48,17 +49,28 @@ public class openAPIRequest {
 
             //int responsenCode= connection.getResponseCode();
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
             String line;
             StringBuilder response = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 response.append(line);
             }
+            JSONObject request_json = new JSONObject(response.toString());
 
-            apiResult = new APIResult(new JSONObject(response.toString()));
+            JSONArray data=request_json.getJSONObject("response")
+                    .getJSONObject("body")
+                    .getJSONObject("items")
+                    .getJSONArray("item");
+
+
+
+
+            apiResult = new APIResult(new JSONArray(data));
             reader.close();
 
             // 응답 출력
             //System.out.println("Response: " + response.toString());
+
         } catch (MalformedURLException e) {
             log.error("telegram Error: " + e.getMessage());
             throw new RuntimeException(e);
